@@ -4,7 +4,7 @@ import (
 	"flag"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
-	"k8s.io/client-go/util/homedir"
+	"os"
 	"path/filepath"
 )
 
@@ -12,7 +12,7 @@ func GetKubeConfig() *rest.Config {
 	// 声明kubeconfig配置文件
 	var kubeconfig *string
 	// 获取home环境变量，拿到$HOME/.kube/config配置文件
-	if home := homedir.HomeDir(); home != "" {
+	if home := homeDir(); home != "" {
 		kubeconfig = flag.String("kubeconfig", filepath.Join(home, ".kube", "config"), "(optional) absolute path to the kubeconfig file")
 	} else {
 		//否则就根据kubeconfig传到获得config的路径
@@ -28,4 +28,10 @@ func GetKubeConfig() *rest.Config {
 		panic(err.Error())
 	}
 	return config
+}
+func homeDir() string {
+	if h := os.Getenv("HOME"); h != "" {
+		return h
+	}
+	return os.Getenv("USERPROFILE") // windows
 }
