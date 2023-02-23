@@ -41,4 +41,20 @@ func main() {
 		fmt.Println("删除失败", err)
 	}
 
+	// 更新pod(完整yaml)
+	// k8s.io/api/core/v1
+	//clientset.CoreV1().Pods(namespace).Update(context.TODO(),&v12.Pod{},v1.UpdateOptions{})
+
+	// 获取deployment副本数
+	scale, err := clientset.AppsV1().Deployments(namespace).GetScale(context.TODO(), "test-nginx", v1.GetOptions{})
+	if err != nil {
+		fmt.Println("查询", err)
+	}
+	fmt.Println("查询test-nginx deployment的副本数")
+	fmt.Println(scale.Status.Replicas)
+
+	// 创建deployment
+	// k8s.io/api/apps/v1
+	//clientset.AppsV1().Deployments(namespace).Create(context.TODO(), &v12.Deployment{}, v1.CreateOptions{})
+
 }
